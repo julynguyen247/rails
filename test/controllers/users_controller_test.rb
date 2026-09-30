@@ -45,4 +45,35 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to users_url
   end
+
+  test "should follow user" do
+    follower = User.create!(name: "Another user", email: "another@example.com")
+
+    assert_difference("Follow.count") do
+      post follow_user_url(@user), params: { follower_id: follower.id }
+    end
+
+    assert_redirected_to user_url(@user)
+    assert follower.following?(@user)
+  end
+
+  test "should not follow self" do
+    assert_no_difference("Follow.count") do
+      post follow_user_url(@user), params: { follower_id: @user.id }
+    end
+
+    assert_redirected_to user_url(@user)
+  end
+
+  test "should unfollow user" do
+    follower = users(:one)
+    followed = users(:two)
+
+    assert_difference("Follow.count", -1) do
+      delete unfollow_user_url(followed), params: { follower_id: follower.id }
+    end
+
+    assert_redirected_to user_url(followed)
+    assert_not follower.following?(followed)
+  end
 end

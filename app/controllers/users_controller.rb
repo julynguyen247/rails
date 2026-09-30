@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :set_user, only: %i[ show edit update destroy follow unfollow ]
 
   # GET /users or /users.json
   def index
@@ -53,6 +53,33 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to users_path, status: :see_other, notice: "User was successfully destroyed." }
+      format.json { head :no_content }
+    end
+  end
+
+  # POST /users/1/follow
+  def follow
+    follower = User.find(params.require(:follower_id))
+    relationship = follower.follow(@user)
+
+    respond_to do |format|
+      if relationship.persisted?
+        format.html { redirect_to @user, notice: "#{follower.name} is now following #{@user.name}." }
+        format.json { render json: relationship, status: :created }
+      else
+        format.html { redirect_to @user, alert: relationship.errors.full_messages.to_sentence }
+        format.json { render json: relationship.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /users/1/unfollow
+  def unfollow
+    follower = User.find(params.require(:follower_id))
+    follower.unfollow(@user)
+
+    respond_to do |format|
+      format.html { redirect_to @user, notice: "#{follower.name} is no longer following #{@user.name}." }
       format.json { head :no_content }
     end
   end
