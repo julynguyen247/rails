@@ -1,0 +1,12 @@
+active:
+  title: Hoàn thành báo cáo
+  notes: Kiểm tra lại số liệu
+  priority: high
+  due_date: <%= Date.current %>
+  completed: false
+
+completed:
+  title: Trả lời email
+  priority: low
+  completed: true
+  completed_at: <%= Time.current %>

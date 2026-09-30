@@ -7,8 +7,8 @@ ruby '2.7.8'
 gem 'rails', '6.0.2.1'
 # Rails 6 expects concurrent-ruby to load Ruby's Logger constant.
 gem 'concurrent-ruby', '1.3.4'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+# Use PostgreSQL as the database for Active Record
+gem 'pg', '1.5.9'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets

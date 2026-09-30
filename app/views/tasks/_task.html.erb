@@ -1,0 +1,61 @@
+<article class="task-item <%= 'is-completed' if task.completed? %>">
+  <%= button_to toggle_task_path(task), method: :patch, class: "check-button", title: task.completed? ? "Đánh dấu chưa xong" : "Đánh dấu hoàn thành", aria: { label: task.completed? ? "Đánh dấu chưa xong" : "Đánh dấu hoàn thành" } do %>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>
+  <% end %>
+
+  <div class="task-main">
+    <div class="task-title-row">
+      <h3><%= task.title %></h3>
+      <span class="priority priority--<%= task.priority %>">
+        <span></span><%= priority_label(task.priority) %>
+      </span>
+    </div>
+    <% if task.notes.present? %><p class="task-notes"><%= task.notes %></p><% end %>
+    <% if task.image.attached? %>
+      <a class="task-image-link" href="<%= url_for(task.image) %>" target="_blank" rel="noopener" aria-label="Mở ảnh của <%= task.title %>">
+        <%= image_tag task.image, class: "task-image", alt: "Ảnh đính kèm cho #{task.title}", loading: "lazy" %>
+      </a>
+    <% end %>
+    <div class="task-meta">
+      <% if task.due_date.present? %>
+        <span class="due-date <%= 'is-overdue' if task.overdue? %>">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 011 1v14H4V6a1 1 0 011-1z"/></svg>
+          <% if task.due_date == Date.current %>
+            Hôm nay
+          <% elsif task.overdue? %>
+            Quá hạn · <%= task.due_date.strftime("%d/%m") %>
+          <% else %>
+            <%= task.due_date.strftime("%d/%m/%Y") %>
+          <% end %>
+        </span>
+      <% end %>
+      <% if task.completed? %><span class="completed-label">Đã hoàn thành</span><% end %>
+    </div>
+  </div>
+
+  <details class="task-actions">
+    <summary aria-label="Tùy chọn cho <%= task.title %>">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+    </summary>
+    <div class="actions-popover">
+      <strong>Chỉnh sửa</strong>
+      <%= form_with model: task, local: true, class: "edit-form" do |form| %>
+        <%= form.text_field :title, maxlength: 120, required: true, aria: { label: "Tên công việc" } %>
+        <%= form.text_area :notes, maxlength: 500, rows: 2, placeholder: "Ghi chú...", aria: { label: "Ghi chú" } %>
+        <label class="edit-image-field">
+          <span><%= task.image.attached? ? "Thay ảnh" : "Thêm ảnh" %></span>
+          <%= form.file_field :image, accept: "image/jpeg,image/png,image/webp,image/gif", aria: { label: "Ảnh đính kèm" } %>
+        </label>
+        <div class="edit-row">
+          <%= form.date_field :due_date, aria: { label: "Hạn hoàn thành" } %>
+          <%= form.select :priority, [["Thấp", "low"], ["Vừa", "medium"], ["Cao", "high"]], {}, aria: { label: "Mức ưu tiên" } %>
+        </div>
+        <%= form.submit "Lưu thay đổi", class: "save-button" %>
+      <% end %>
+      <%= link_to task_path(task), method: :delete, data: { confirm: "Xóa công việc này?" }, class: "delete-link" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14"/></svg>
+        Xóa công việc
+      <% end %>
+    </div>
+  </details>
+</article>

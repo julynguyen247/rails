@@ -1,7 +1,16 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+Task.find_or_create_by!(title: "Lên kế hoạch cho tuần mới") do |task|
+  task.notes = "Chọn 3 mục tiêu quan trọng nhất cần hoàn thành."
+  task.priority = "high"
+  task.due_date = Date.current
+end
+
+Task.find_or_create_by!(title: "Đọc 20 trang sách") do |task|
+  task.priority = "low"
+  task.due_date = Date.current + 1.day
+end
+
+Task.find_or_create_by!(title: "Dọn dẹp hộp thư") do |task|
+  task.priority = "medium"
+  task.completed = true
+  task.completed_at = Time.current
+end

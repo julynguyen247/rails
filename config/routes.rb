@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
-  root "users#index"
+  root "tasks#index"
+
+  resources :tasks, only: %i[index create update destroy] do
+    patch :toggle, on: :member
+    delete :clear_completed, on: :collection
+  end
+
+  # Keep the existing scaffold available while Dayflow owns the home page.
   resources :users
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
