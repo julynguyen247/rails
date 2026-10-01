@@ -13,14 +13,18 @@ class UserTest < ActiveSupport::TestCase
     assert_not follower.following?(followed)
   end
 
-  test "cannot follow the same user twice" do
+  test "following the same user twice returns the existing relationship" do
     follower = users(:one)
     followed = users(:two)
 
-    relationship = follower.follow(followed)
+    existing_relationship = follower.active_follows.find_by!(followed: followed)
 
-    assert_not relationship.persisted?
-    assert_includes relationship.errors[:followed_id], "has already been taken"
+    assert_no_difference("Follow.count") do
+      relationship = follower.follow(followed)
+
+      assert_predicate relationship, :persisted?
+      assert_equal existing_relationship, relationship
+    end
   end
 
   test "cannot follow itself" do

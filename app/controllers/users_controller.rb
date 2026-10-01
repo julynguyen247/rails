@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   # GET /users or /users.json
   def index
     @users = User.all
+    @follower_counts = Follow.group(:followed_id).count
+    @following_counts = Follow.group(:follower_id).count
   end
 
   # GET /users/1 or /users/1.json

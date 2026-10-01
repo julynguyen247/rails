@@ -14,7 +14,7 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_follows, source: :follower
 
   def follow(user)
-    active_follows.create(followed: user)
+    active_follows.find_or_create_by(followed: user)
   end
 
   def unfollow(user)
