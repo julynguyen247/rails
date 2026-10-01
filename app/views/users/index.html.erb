@@ -7,6 +7,8 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
+      <th>Followers</th>
+      <th>Following</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -16,6 +18,8 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.email %></td>
+        <td><%= @follower_counts.fetch(user.id, 0) %></td>
+        <td><%= @following_counts.fetch(user.id, 0) %></td>
         <td><%= link_to 'Show', user %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %></td>
         <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>

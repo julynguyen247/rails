@@ -7,5 +7,8 @@ Rails.application.routes.draw do
   end
 
   # Keep the existing scaffold available while Dayflow owns the home page.
-  resources :users
+  resources :users do
+    post :follow, on: :member
+    delete :unfollow, on: :member
+  end
 end

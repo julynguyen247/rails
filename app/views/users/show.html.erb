@@ -1,4 +1,5 @@
 <p id="notice"><%= notice %></p>
+<p id="alert"><%= alert %></p>
 
 <p>
   <strong>Name:</strong>
@@ -9,6 +10,52 @@
   <strong>Email:</strong>
   <%= @user.email %>
 </p>
+
+<section>
+  <h2>Follow this user</h2>
+
+  <% available_followers = User.where.not(id: @user.id).where.not(id: @user.follower_ids) %>
+  <% if available_followers.any? %>
+    <%= form_with url: follow_user_path(@user), method: :post, local: true do |form| %>
+      <%= form.label :follower_id, "User" %>
+      <%= form.collection_select :follower_id, available_followers, :id, :name %>
+      <%= form.submit "Follow" %>
+    <% end %>
+  <% else %>
+    <p>No users are available to follow this user.</p>
+  <% end %>
+</section>
+
+<section>
+  <h2>Followers (<%= @user.followers.count %>)</h2>
+
+  <% if @user.followers.any? %>
+    <ul>
+      <% @user.followers.each do |follower| %>
+        <li>
+          <%= link_to follower.name, follower %>
+          <%= button_to "Remove", unfollow_user_path(@user), method: :delete, params: { follower_id: follower.id } %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No followers yet.</p>
+  <% end %>
+</section>
+
+<section>
+  <h2>Following (<%= @user.following.count %>)</h2>
+
+  <% if @user.following.any? %>
+    <ul>
+      <% @user.following.each do |followed| %>
+        <li><%= link_to followed.name, followed %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Not following anyone yet.</p>
+  <% end %>
+</section>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
