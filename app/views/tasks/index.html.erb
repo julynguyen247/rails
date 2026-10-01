@@ -119,11 +119,23 @@
 
       <nav class="filters" aria-label="Lọc công việc">
         <% [["all", "Tất cả", @total_count], ["active", "Đang làm", @active_count], ["today", "Hôm nay", Task.active.due_today.count], ["completed", "Đã xong", @completed_count]].each do |value, label, count| %>
-          <%= link_to root_path(filter: value), class: "filter-chip #{'is-active' if @filter == value}" do %>
+          <%= link_to root_path(filter: value, q: @query.presence), class: "filter-chip #{'is-active' if @filter == value}" do %>
             <%= label %> <span><%= count %></span>
           <% end %>
         <% end %>
       </nav>
+
+      <%= form_with url: root_path, method: :get, local: true, class: "search-form", role: "search" do |form| %>
+        <%= form.hidden_field :filter, value: @filter %>
+        <span class="search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        </span>
+        <%= form.search_field :q, value: @query, placeholder: "Tìm theo tên hoặc ghi chú...", aria: { label: "Tìm công việc" } %>
+        <% if @query.present? %>
+          <%= link_to "Xóa", root_path(filter: @filter), class: "clear-search", aria: { label: "Xóa từ khóa tìm kiếm" } %>
+        <% end %>
+        <%= form.submit "Tìm", class: "search-button" %>
+      <% end %>
 
       <div class="task-list">
         <% if @tasks.any? %>
@@ -133,8 +145,13 @@
             <div class="empty-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12l2.5 2.5L16 9m5 3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3><%= @filter == "completed" ? "Chưa có việc nào hoàn thành" : "Danh sách đang trống" %></h3>
-            <p><%= @filter == "all" ? "Thêm công việc đầu tiên để bắt đầu nhé." : "Thử chọn một bộ lọc khác để xem công việc." %></p>
+            <% if @query.present? %>
+              <h3>Không tìm thấy công việc</h3>
+              <p>Thử một từ khóa khác hoặc xóa bộ lọc tìm kiếm.</p>
+            <% else %>
+              <h3><%= @filter == "completed" ? "Chưa có việc nào hoàn thành" : "Danh sách đang trống" %></h3>
+              <p><%= @filter == "all" ? "Thêm công việc đầu tiên để bắt đầu nhé." : "Thử chọn một bộ lọc khác để xem công việc." %></p>
+            <% end %>
           </div>
         <% end %>
       </div>

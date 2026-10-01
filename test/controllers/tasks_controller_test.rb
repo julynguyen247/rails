@@ -13,6 +13,27 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_select ".task-item", minimum: 1
   end
 
+  test "searches tasks while keeping the selected filter" do
+    completed_match = Task.create!(title: "Báo cáo tháng", priority: "high", completed: true)
+    Task.create!(title: "Báo cáo tuần", priority: "medium", completed: false)
+
+    get root_url, params: { filter: "completed", q: "báo cáo" }
+
+    assert_response :success
+    assert_select ".task-item", count: 1
+    assert_select ".task-item h3", text: completed_match.title
+    assert_select "input[name='q'][value='báo cáo']"
+    assert_select ".filter-chip.is-active", text: /Đã xong/
+  end
+
+  test "shows a search-specific empty state" do
+    get root_url, params: { q: "không tồn tại" }
+
+    assert_response :success
+    assert_select ".task-item", count: 0
+    assert_select ".empty-state h3", "Không tìm thấy công việc"
+  end
+
   test "creates a task" do
     assert_difference("Task.count", 1) do
       post tasks_url, params: { task: { title: "Việc mới", priority: "high" } }

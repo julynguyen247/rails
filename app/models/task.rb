@@ -13,6 +13,10 @@ class Task < ApplicationRecord
   scope :active, -> { where(completed: false) }
   scope :completed, -> { where(completed: true) }
   scope :due_today, -> { where(due_date: Date.current) }
+  scope :matching, lambda { |query|
+    term = "%#{sanitize_sql_like(query)}%"
+    where("title ILIKE :term OR notes ILIKE :term", term: term)
+  }
 
   def overdue?
     !completed? && due_date.present? && due_date < Date.current
