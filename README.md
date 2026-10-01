@@ -1,6 +1,6 @@
 # Dayflow
 
-Ứng dụng todo một trang xây bằng Rails 6 và PostgreSQL. Có tạo, sửa, xóa, đánh dấu hoàn thành, deadline, mức ưu tiên, ảnh đính kèm, bộ lọc và thống kê tiến độ.
+Ứng dụng todo một trang xây bằng Rails 6 và PostgreSQL. Có tạo, sửa, xóa, đánh dấu hoàn thành, deadline, mức ưu tiên, ảnh đính kèm, tìm kiếm, bộ lọc và thống kê tiến độ.
 
 ## Chạy local
 

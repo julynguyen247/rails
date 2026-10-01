@@ -4,7 +4,10 @@ class TasksController < ApplicationController
   def index
     @task = Task.new(priority: "medium")
     @filter = params[:filter].presence_in(%w[all active today completed]) || "all"
-    @tasks = filtered_tasks.order(completed: :asc, created_at: :desc)
+    @query = params[:q].to_s.strip
+    @tasks = filtered_tasks
+    @tasks = @tasks.matching(@query) if @query.present?
+    @tasks = @tasks.order(completed: :asc, created_at: :desc)
     @total_count = Task.count
     @completed_count = Task.completed.count
     @active_count = @total_count - @completed_count
@@ -67,6 +70,7 @@ class TasksController < ApplicationController
 
   def load_index_data
     @filter = "all"
+    @query = ""
     @tasks = Task.order(completed: :asc, created_at: :desc)
     @total_count = Task.count
     @completed_count = Task.completed.count

@@ -125,6 +125,16 @@ kbd { padding: 2px 5px; border: 1px solid #d9dad4; border-bottom-width: 2px; bor
 .filter-chip:hover { color: var(--ink); background: #eeeee8; }
 .filter-chip.is-active { color: #285d42; border-color: #d2dfd5; background: #eaf1eb; }
 .filter-chip.is-active span { color: #5e886c; }
+.search-form { position: relative; display: flex; align-items: center; gap: 8px; margin: 16px 27px; }
+.search-icon { position: absolute; left: 12px; display: grid; color: #8b9088; pointer-events: none; }
+.search-icon svg { width: 17px; }
+.search-form input[type="search"] { width: 100%; height: 39px; padding: 0 48px 0 38px; color: var(--ink); border: 1px solid #dedfd8; border-radius: 10px; outline: none; background: #fbfaf7; font-size: 11px; transition: border-color .2s, box-shadow .2s, background .2s; }
+.search-form input[type="search"]::placeholder { color: #a4a8a0; }
+.search-form input[type="search"]:focus { border-color: #77a48a; background: white; box-shadow: 0 0 0 3px rgba(47, 101, 73, .09); }
+.clear-search { position: absolute; right: 58px; color: #858a82; font-size: 10px; font-weight: 650; text-decoration: none; }
+.clear-search:hover { color: var(--ink); }
+.search-button { height: 39px; padding: 0 13px; color: white; border: 0; border-radius: 9px; background: var(--green); cursor: pointer; font-size: 11px; font-weight: 700; }
+.search-button:hover { background: #28583f; }
 .task-list { min-height: 316px; }
 .task-item { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; padding: 19px 25px 18px 27px; border-bottom: 1px solid #eeede8; transition: background .18s; }
 .task-item:hover { background: #fcfbf7; }
@@ -208,6 +218,7 @@ kbd { padding: 2px 5px; border: 1px solid #d9dad4; border-bottom-width: 2px; bor
   .clear-link { width: 24px; overflow: hidden; white-space: nowrap; }
   .clear-link svg { min-width: 17px; }
   .filters { padding-inline: 20px; }
+  .search-form { margin-inline: 20px; }
   .task-item { padding-inline: 20px 17px; gap: 11px; }
   .actions-popover { position: fixed; top: auto; right: 12px; bottom: 12px; width: calc(100vw - 24px); }
   .list-footer { padding-inline: 20px; }

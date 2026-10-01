@@ -21,4 +21,19 @@ class TaskTest < ActiveSupport::TestCase
     task.completed = true
     assert_not task.overdue?
   end
+
+  test "searches title and notes case insensitively" do
+    title_match = Task.create!(title: "Chuẩn bị Sprint Alpha", priority: "high")
+    notes_match = Task.create!(title: "Gọi khách hàng", notes: "Trao đổi về sprint alpha", priority: "medium")
+    Task.create!(title: "Mua cà phê", priority: "low")
+
+    assert_equal [title_match, notes_match].sort, Task.matching("SPRINT ALPHA").sort
+  end
+
+  test "treats SQL wildcards as regular search characters" do
+    literal_match = Task.create!(title: "Hoàn thành 100%", priority: "medium")
+    Task.create!(title: "Công việc khác", priority: "low")
+
+    assert_equal [literal_match], Task.matching("100%")
+  end
 end
